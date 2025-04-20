@@ -36,9 +36,9 @@ end)
 
 When you create a future, it wont begin execution until it is either polled or awaited.
 
-Polling will advance the future to it's next resumption point every time that it is called, returning a [Poll](https://yetanotherclown.github.io/luau-future/api/Poll) to let you check the status of the future.
+Polling will advance the future to it's next resumption point every time that it is called, returning a [Poll](https://yetanotherclown.github.io/luau-futures/api/Poll) to let you check the status of the future.
 
-If the Poll is ready, you can also unwrap it to get the [Result](https://yetanotherclown.github.io/luau-future/api/Result)
+If the Poll is ready, you can also unwrap it to get the [Result](https://yetanotherclown.github.io/luau-futures/api/Result)
 
 ```luau
 local poll = myFuture:poll()
@@ -55,9 +55,9 @@ local result = myFuture:await()
 -- Handle result
 ```
 
-To read the result, you can use [Result:isOk](https://yetanotherclown.github.io/luau-future/api/Result#isOk) or [Result:isErr](https://yetanotherclown.github.io/luau-future/api/Result#isOk) to check what type the Result is.
+To read the result, you can use [Result:isOk](https://yetanotherclown.github.io/luau-futures/api/Result#isOk) or [Result:isErr](https://yetanotherclown.github.io/luau-futures/api/Result#isOk) to check what type the Result is.
 
-You can then use [Result:unwrapOk](https://yetanotherclown.github.io/luau-future/api/Result#unwrapOk) or [Result:unwrapErr](https://yetanotherclown.github.io/luau-future/api/Result#unwrapErr) to get the value of the result.
+You can then use [Result:unwrapOk](https://yetanotherclown.github.io/luau-futures/api/Result#unwrapOk) or [Result:unwrapErr](https://yetanotherclown.github.io/luau-futures/api/Result#unwrapErr) to get the value of the result.
 
 ```luau
 if result:isOk() then
@@ -69,7 +69,7 @@ end
 
 There are also several other methods for chaining, combining, and mapping futures, as well as other utilities for working with futures.
 
-It is suggested to read the [API Documentation](https://yetanotherclown.github.io/luau-future) for more information about these methods.
+It is suggested to read the [API Documentation](https://yetanotherclown.github.io/luau-futures) for more information about these methods.
 
 ## Why Luau Futures
 
