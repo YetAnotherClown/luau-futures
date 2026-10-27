@@ -12,7 +12,6 @@ local Future = require("@self/Future") :: any
 export type FutureLike<E, U...> = {
 	await: (self: FutureLike<E, U...>) -> Result<E, U...>,
 	poll: (self: FutureLike<E, U...>) -> Poll<E, U...>,
-	[any]: any,
 }
 
 -- FUTURE: Replace when recursive type restrictions are lifted
@@ -20,7 +19,7 @@ export type FutureLike<E, U...> = {
 -- Using Futures.FutureLike will not provide intellisense.
 export type Future<E, U...> = FutureFirst<E, U...>
 
-type FutureExhausted = {
+type FutureExhausted = FutureLike<any, ...any> & {
 	_onResolve: { (...any) -> () },
 	_onErr: { (any) -> () },
 	_mapOn: {
@@ -34,7 +33,6 @@ type FutureExhausted = {
 
 	after: <T...>(self: FutureLike<any, ...any>, fn: (Result<any, ...any>) -> FutureLike<any, T...>) -> FutureExhausted,
 	andThen: <T...>(self: FutureLike<any, ...any>, fn: (...any) -> FutureLike<any, T...>) -> FutureExhausted,
-	await: (self: FutureLike<any, ...any>) -> Result<any, ...any>,
 	inspectErr: (self: FutureLike<any, ...any>, fn: (any) -> ()) -> FutureExhausted,
 	inspectOk: (self: FutureLike<any, ...any>, fn: (...any) -> ()) -> FutureExhausted,
 	join: <T...>(self: FutureLike<any, ...any>, otherFuture: FutureLike<any, T...>) -> FutureExhausted,
@@ -43,10 +41,9 @@ type FutureExhausted = {
 	mapOk: <T...>(self: FutureLike<any, ...any>, fn: (...any) -> T...) -> FutureExhausted,
 	orElse: (self: FutureLike<any, ...any>, fn: (any) -> FutureExhausted) -> FutureExhausted,
 	unwrapOrElse: (self: FutureLike<any, ...any>, fn: (err: any) -> ...any) -> FutureExhausted,
-	poll: (self: FutureLike<any, ...any>) -> Poll<any, ...any>,
 }
 
-type FutureLast<E, U...> = {
+type FutureLast<E, U...> = FutureLike<E, U...> & {
 	_onResolve: { (U...) -> () },
 	_onErr: { (E) -> () },
 	_mapOn: {
@@ -60,7 +57,6 @@ type FutureLast<E, U...> = {
 
 	after: <T...>(self: FutureLike<E, U...>, fn: (Result<E, U...>) -> FutureLike<E, T...>) -> FutureExhausted,
 	andThen: <T...>(self: FutureLike<E, U...>, fn: (U...) -> FutureLike<E, T...>) -> FutureExhausted,
-	await: (self: FutureLike<E, U...>) -> Result<E, U...>,
 	inspectErr: (self: FutureLike<E, U...>, fn: (E) -> ()) -> FutureLast<E, U...>,
 	inspectOk: (self: FutureLike<E, U...>, fn: (U...) -> ()) -> FutureLast<E, U...>,
 	join: <T...>(self: FutureLike<E, U...>, otherFuture: FutureLike<E, T...>) -> FutureExhausted,
@@ -69,10 +65,9 @@ type FutureLast<E, U...> = {
 	mapOk: <T...>(self: FutureLike<E, U...>, fn: (U...) -> T...) -> FutureExhausted,
 	orElse: (self: FutureLike<E, U...>, fn: (E) -> FutureLast<E, U...>) -> FutureLast<E, U...>,
 	unwrapOrElse: (self: FutureLike<E, U...>, fn: (err: E) -> U...) -> FutureLast<E, U...>,
-	poll: (self: FutureLike<E, U...>) -> Poll<E, U...>,
 }
 
-type FutureNext<E, U...> = {
+type FutureNext<E, U...> = FutureLike<E, U...> & {
 	_onResolve: { (U...) -> () },
 	_onErr: { (E) -> () },
 	_mapOn: {
@@ -86,7 +81,6 @@ type FutureNext<E, U...> = {
 
 	after: <T...>(self: FutureLike<E, U...>, fn: (Result<E, U...>) -> FutureLike<E, T...>) -> FutureLast<E, T...>,
 	andThen: <T...>(self: FutureLike<E, U...>, fn: (U...) -> FutureLike<E, T...>) -> FutureLast<E, T...>,
-	await: (self: FutureLike<E, U...>) -> Result<E, U...>,
 	inspectErr: (self: FutureLike<E, U...>, fn: (E) -> ()) -> FutureNext<E, U...>,
 	inspectOk: (self: FutureLike<E, U...>, fn: (U...) -> ()) -> FutureNext<E, U...>,
 	join: <T...>(self: FutureLike<E, U...>, otherFuture: FutureLike<E, T...>) -> FutureExhausted,
@@ -95,10 +89,9 @@ type FutureNext<E, U...> = {
 	mapOk: <T...>(self: FutureLike<E, U...>, fn: (U...) -> T...) -> FutureLast<E, T...>,
 	orElse: (self: FutureLike<E, U...>, fn: (E) -> FutureNext<E, U...>) -> FutureNext<E, U...>,
 	unwrapOrElse: (self: FutureLike<E, U...>, fn: (err: E) -> U...) -> FutureNext<E, U...>,
-	poll: (self: FutureLike<E, U...>) -> Poll<E, U...>,
 }
 
-type FutureFirst<E, U...> = {
+type FutureFirst<E, U...> = FutureLike<E, U...> & {
 	_onResolve: { (U...) -> () },
 	_onErr: { (E) -> () },
 	_mapOn: {
@@ -112,7 +105,6 @@ type FutureFirst<E, U...> = {
 
 	after: <T...>(self: FutureLike<E, U...>, fn: (Result<E, U...>) -> FutureLike<E, T...>) -> FutureNext<E, T...>,
 	andThen: <T...>(self: FutureLike<E, U...>, fn: (U...) -> FutureLike<E, T...>) -> FutureNext<E, T...>,
-	await: (self: FutureLike<E, U...>) -> Result<E, U...>,
 	inspectErr: (self: FutureLike<E, U...>, fn: (E) -> ()) -> FutureFirst<E, U...>,
 	inspectOk: (self: FutureLike<E, U...>, fn: (U...) -> ()) -> FutureFirst<E, U...>,
 	-- FUTURE: Return Future<E, (U..., T...)>
@@ -124,7 +116,6 @@ type FutureFirst<E, U...> = {
 	orElse: (self: FutureLike<E, U...>, fn: (E) -> FutureFirst<E, U...>) -> FutureFirst<E, U...>,
 	-- FUTURE: Return Future<never, U...>
 	unwrapOrElse: (self: FutureLike<E, U...>, fn: (err: E) -> U...) -> FutureFirst<E, U...>,
-	poll: (self: FutureLike<E, U...>) -> Poll<E, U...>,
 }
 
 type Library = {
